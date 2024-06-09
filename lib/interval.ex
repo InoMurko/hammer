@@ -30,12 +30,11 @@ defmodule Interval do
     #   do: Process.cancel_timer(state.schedule)
     req_per_node = Map.get(state, :req_per_node)
     url = Map.get(state, :url)
-    [node()|Node.list]
-    |> Enum.flat_map(fn node ->
-         1..req_per_node |> Enum.map(fn _ ->
-           Task.Supervisor.async({TasksSupervisor, node}, Blitzy.Worker, :start, [url])
+
+    1..req_per_node
+    |> Enum.map(fn _ ->
+           Task.Supervisor.async(TasksSupervisor, Blitzy.Worker, :start, [url])
          end)
-       end)
     |> Enum.map(&Task.await(&1, :infinity))
     |> parse_results
 

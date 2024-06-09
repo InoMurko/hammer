@@ -20,8 +20,8 @@ defmodule Blitzy.Worker do
     {:error, reason}
   end
 
-  defp handle_response({_msecs, _}) do
-     Logger.info "worker [#{node()}-#{inspect self()}] errored out"
+  defp handle_response({_msecs, _} = reason) do
+     Logger.info "worker [#{node()}-#{inspect self()}] errored out #{inspect reason}"
     {:error, :unknown}
   end
 

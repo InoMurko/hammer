@@ -3,15 +3,9 @@ defmodule Blitzy.CLI do
   require Logger
 
   def main(args) do
-    Application.get_env(:blitzy, :master_node)
-      |> Node.start
-
-    Application.get_env(:blitzy, :slave_nodes)
-      |> Enum.each(&Node.connect(&1))
-
     args
       |> parse_args
-      |> process_options([node()|Node.list])
+      |> process_options()
   end
 
   defp parse_args(args) do
@@ -19,10 +13,10 @@ defmodule Blitzy.CLI do
                               strict: [requests: :integer])
   end
 
-  defp process_options(options, nodes) do
+  defp process_options(options) do
     case options do
       {[requests: n], [url], []} ->
-        do_requests(n, url, nodes)
+        do_requests(n, url)
 
       _ ->
         Logger.info "Wrong #{options}"
@@ -31,7 +25,7 @@ defmodule Blitzy.CLI do
     end
   end
 
-  defp do_requests(n_requests, url, _) do
+  defp do_requests(n_requests, url) do
     Logger.info "Pummelling #{url} with #{n_requests} requests"
     Interval.start_link(%{req_per_node: n_requests, url: url})
     #kill it with exit signal, hacky but cute
