@@ -34,7 +34,8 @@ defmodule Blitzy.CLI do
   defp do_requests(n_requests, url, _) do
     Logger.info "Pummelling #{url} with #{n_requests} requests"
     Interval.start_link(%{req_per_node: n_requests, url: url})
-    Process.sleep(20_000)
+    #kill it with exit signal, hacky but cute
+    Process.sleep(:infinity)
   end
 
   defp do_help() do
