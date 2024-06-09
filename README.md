@@ -1,3 +1,8 @@
+///
+docker build -t s -f Dockerfile .
+docker run -it s -n 10 $URL
+
+///
 Blitzy - A simple HTTP load tester in Elixir
 ============================================
 
