@@ -28,7 +28,6 @@ defmodule Interval do
     #           setting many subsequent timers
     # if is_reference(state.schedule),
     #   do: Process.cancel_timer(state.schedule)
-    IO.inspect state
     req_per_node = Map.get(state, :req_per_node)
     url = Map.get(state, :url)
     [node()|Node.list]
