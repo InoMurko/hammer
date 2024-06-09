@@ -1,6 +1,6 @@
 defmodule Interval do
   use GenServer
-
+  use Timex
   alias Blitzy.TasksSupervisor
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts)
@@ -30,14 +30,17 @@ defmodule Interval do
     #   do: Process.cancel_timer(state.schedule)
     req_per_node = Map.get(state, :req_per_node)
     url = Map.get(state, :url)
-
+{timestamp, _} = Duration.measure(fn ->
     1..req_per_node
     |> Enum.map(fn _ ->
            Task.Supervisor.async(TasksSupervisor, Blitzy.Worker, :start, [url])
          end)
     |> Enum.map(&Task.await(&1, :infinity))
     |> parse_results
-
+end)
+IO.puts """
+Batch duration (with result parsing) #{Duration.to_milliseconds(timestamp)} msec
+"""
     {:noreply, Map.put(state, :schedule, schedule_work(state.interval))}
   end
 

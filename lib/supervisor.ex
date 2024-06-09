@@ -7,7 +7,7 @@ defmodule Blitzy.Supervisor do
 
   def init(:ok) do
     children = [
-      :hackney_pool.child_spec(:rpc_pool,  [timeout: 15000, max_connections: 600]),
+      :hackney_pool.child_spec(:rpc_pool,  [timeout: 20000, max_connections: 600]),
       supervisor(Task.Supervisor, [[name: Blitzy.TasksSupervisor]])
     ]
 
